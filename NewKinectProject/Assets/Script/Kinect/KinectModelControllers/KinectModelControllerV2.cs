@@ -76,7 +76,8 @@ public class KinectModelControllerV2 : MonoBehaviour {
 	public GameObject Foot_Right;
 	
 	public int player;
-	public BoneMask Mask = BoneMask.All;
+    public bool isTracked = false;
+    public BoneMask Mask = BoneMask.All;
 	public bool animated;
 	public float blendWeight = 1;
 	
@@ -170,7 +171,8 @@ public class KinectModelControllerV2 : MonoBehaviour {
 	void Update () {
 		//update the data from the kinect if necessary
 		if(sw.pollSkeleton()){
-			for( int ii = 0; ii < (int)Kinect.NuiSkeletonPositionIndex.Count; ii++)
+            isTracked = true;
+            for ( int ii = 0; ii < (int)Kinect.NuiSkeletonPositionIndex.Count; ii++)
 			{
 				if( ((uint)Mask & (uint)(1 << ii) ) > 0 && (_nullMask & (uint)(1 << ii)) <= 0 )
 				{

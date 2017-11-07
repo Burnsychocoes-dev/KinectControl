@@ -78,7 +78,8 @@ public class KinectPointController : MonoBehaviour {
 	//private Vector4[] _bonePos; //internal handle for the bone positions from the kinect
 	
 	public int player;
-	public BoneMask Mask = BoneMask.All;
+    public bool isTracked = false;
+    public BoneMask Mask = BoneMask.All;
 	
 	public float scale = 1.0f;
 	
@@ -93,14 +94,18 @@ public class KinectPointController : MonoBehaviour {
 		//_bonePos = new Vector4[(int)BoneIndex.Num_Bones];
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if(player == -1)
-			return;
+
+    // Update is called once per frame
+    void Update() {
+        if (player == -1)
+        { 
+            isTracked = false;
+            return;
+        }
 		//update all of the bones positions
 		if (sw.pollSkeleton())
 		{
+            isTracked = true;
 			for( int ii = 0; ii < (int)Kinect.NuiSkeletonPositionIndex.Count; ii++) {
 				//_bonePos[ii] = sw.getBonePos(ii);
 				if( ((uint)Mask & (uint)(1 << ii) ) > 0 ){
