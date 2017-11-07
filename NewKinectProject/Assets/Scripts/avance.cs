@@ -20,8 +20,8 @@ public class avance : MonoBehaviour {
 	void Start () {
         right_shoulder_rot = new Vector3();
         left_shoulder_rot = new Vector3();
-        inc_avance = new Vector3(0.0F, 0.0F, -0.1F);
-        inc_recule = new Vector3(0.0F, 0.0F, 0.1F);
+        inc_avance = new Vector3(0.0F, 0.0F, -1F);
+        inc_recule = new Vector3(0.0F, 0.0F, 1F);
         ep_droite_interv.x = 50.0F;
         ep_droite_interv.y = 180.0F;
         ep_gauche_interv.x = 50.0F;
@@ -41,7 +41,7 @@ public class avance : MonoBehaviour {
             else { }
             
             left_shoulder_rot = Left_Shoulder.transform.eulerAngles;
-            if (left_shoulder_rot.y > ep_gauche_interv.x & left_shoulder_rot.y < ep_gauche_interv.y)
+            if (left_shoulder_rot.y > ep_gauche_interv.x && left_shoulder_rot.y < ep_gauche_interv.y)
             {
                 this.transform.Translate(inc_recule);
                 Debug.Log("Vers l'arrière!");
