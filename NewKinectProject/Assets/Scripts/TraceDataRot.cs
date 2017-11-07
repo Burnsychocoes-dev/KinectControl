@@ -37,7 +37,7 @@ public class TraceDataRot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (tracker.isTracked == true ) // Trace dans le fichier si l'objet est tracké par la Kinect
+        if (tracker.isTracked == true) // Trace dans le fichier si l'objet est tracké par la Kinect
         {
             tracker_orientation = tracker.transform.rotation.eulerAngles;
             sec = stopWatch.Elapsed.TotalSeconds;
