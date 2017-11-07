@@ -8,7 +8,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BalayageDroit : MonoBehaviour
+public class CoupDePoingDroitAvant : MonoBehaviour
 {
     [Tooltip("Kinect Point Controller associé à l'upperbody.")]
     public KinectPointController kpc;
@@ -40,7 +40,7 @@ public class BalayageDroit : MonoBehaviour
         state[3] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         index_state = 0;
         distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
-        distance_threshold_up = 2*(kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
     }
 
     // Update is called once per frame
@@ -51,7 +51,7 @@ public class BalayageDroit : MonoBehaviour
         {
             right_hand_position = kpc.Hand_Right.transform.position;
             right_elbow_position = kpc.Elbow_Right.transform.position;
-            distanceToBody = right_hand_position.x - right_elbow_position.x;
+            distanceToBody = -(right_hand_position.z - right_elbow_position.z);
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kpc.transform.position;
             if (distanceToBody > distance_threshold_up)
@@ -74,7 +74,7 @@ public class BalayageDroit : MonoBehaviour
             }
             else if (index_state == 2 && new_state == Right_hand_states.RIGHT_HAND_HIGH)
             {
-                index_state ++;
+                index_state++;
                 b1 = true;
             }
             else if (index_state == 3 && (new_state == Right_hand_states.RIGHT_HAND_LOW || new_state == Right_hand_states.RIGHT_HAND_MIDDLE))

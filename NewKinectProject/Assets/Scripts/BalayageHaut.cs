@@ -24,6 +24,10 @@ public class BalayageHaut : MonoBehaviour
 
     private Vector3 left_hand_position;
     private Vector3 right_hand_position; // Pour le controle d'application b1
+    private Vector3 left_elbow_position;
+    private Vector3 right_elbow_position;
+    private float distanceToBodyRight;
+    private float distanceToBodyLeft;
     private enum hand_states { HANDS_NEUTRAL = 0, HANDS_LOW, HANDS_HIGH, HANDS_MIDDLE };
     private hand_states[] state;
 
@@ -49,13 +53,17 @@ public class BalayageHaut : MonoBehaviour
         {
             right_hand_position = kpc.Hand_Right.transform.position;
             left_hand_position = kpc.Hand_Left.transform.position;
+            right_elbow_position = kpc.Elbow_Right.transform.position;
+            left_elbow_position = kpc.Elbow_Left.transform.position;
+            distanceToBodyRight = right_hand_position.y - right_elbow_position.y;
+            distanceToBodyLeft = left_hand_position.y - right_elbow_position.y;
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kpc.transform.position;
-            if (right_hand_position.y > distance_threshold_up && left_hand_position.y > distance_threshold_up)
+            if (distanceToBodyRight > distance_threshold_up && distanceToBodyLeft > distance_threshold_up)
                 new_state = hand_states.HANDS_HIGH;
-            else if (right_hand_position.y < distance_threshold_down && left_hand_position.y < distance_threshold_down)
+            else if (distanceToBodyRight < distance_threshold_down && distanceToBodyLeft < distance_threshold_down)
                 new_state = hand_states.HANDS_LOW;
-            else if (right_hand_position.y < distance_threshold_up && right_hand_position.y > distance_threshold_down && left_hand_position.y < distance_threshold_up && left_hand_position.y > distance_threshold_down)
+            else if (distanceToBodyRight < distance_threshold_up && distanceToBodyRight > distance_threshold_down && distanceToBodyLeft < distance_threshold_up && distanceToBodyLeft > distance_threshold_down)
                 new_state = hand_states.HANDS_MIDDLE;
             else { }
 

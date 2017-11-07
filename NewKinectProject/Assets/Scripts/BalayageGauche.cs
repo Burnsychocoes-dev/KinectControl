@@ -23,6 +23,8 @@ public class BalayageGauche : MonoBehaviour
     public bool b1 = false;
 
     private Vector3 right_hand_position; // Pour le controle d'application b1
+    private Vector3 right_elbow_position;
+    private float distanceToBody;
     private enum Right_hand_states { RIGHT_HAND_NEUTRAL = 0, RIGHT_HAND_LOW, RIGHT_HAND_HIGH, RIGHT_HAND_MIDDLE };
     private Right_hand_states[] state;
 
@@ -47,13 +49,16 @@ public class BalayageGauche : MonoBehaviour
         if (kpc.isTracked)
         {
             right_hand_position = kpc.Hand_Right.transform.position;
+            right_elbow_position = kpc.Elbow_Right.transform.position;
+            distanceToBody = right_elbow_position.x - right_hand_position.x;
+            //pas sûr
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kpc.transform.position;
-            if (right_hand_position.x < -distance_threshold_up)
+            if (distanceToBody < -distance_threshold_up && right_hand_position.x < right_elbow_position.x)
                 new_state = Right_hand_states.RIGHT_HAND_HIGH;
-            else if (right_hand_position.x > -distance_threshold_down)
+            else if (distanceToBody > -distance_threshold_down && right_hand_position.x < right_elbow_position.x)
                 new_state = Right_hand_states.RIGHT_HAND_LOW;
-            else if (right_hand_position.x > -distance_threshold_up && right_hand_position.x < -distance_threshold_down)
+            else if (distanceToBody > -distance_threshold_up && distanceToBody < -distance_threshold_down && right_hand_position.x < right_elbow_position.x)
                 new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
             else { }
 
