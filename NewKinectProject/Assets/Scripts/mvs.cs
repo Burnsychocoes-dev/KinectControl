@@ -11,7 +11,7 @@ public class mvs : MonoBehaviour {
     [Tooltip("IN: Tracker est un EmptyObject qui est associé à la position 3D d'une articulation de la Kinectv1 via KinectPointController")]
     public GameObject Tracker; // Game Object qui contient le script KinectPointController
     [Tooltip("IN: A règler suivant la position et l'orientation de la kinect dans le monde réel.")]
-    public Matrix4x4 Real_to_RV=Matrix4x4.identity;
+    public Matrix4x4 Real_to_RV = Matrix4x4.identity;
     [Tooltip("IN: Offset afin de règler le 0 de la Kinect par rapport au 0 du monde virtuel.")]
     public Vector3 offset;
 
