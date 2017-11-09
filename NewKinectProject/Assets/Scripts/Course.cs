@@ -8,7 +8,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BalayageHaut : MonoBehaviour
+public class Course : MonoBehaviour
 {
     [Tooltip("Kinect Point Controller associé à l'upperbody.")]
     public KinectPointController kpc;
@@ -26,9 +26,9 @@ public class BalayageHaut : MonoBehaviour
     private Vector3 right_hand_position; // Pour le controle d'application b1
     private Vector3 left_elbow_position;
     private Vector3 right_elbow_position;
-    private float distanceToBodyRight;
-    private float distanceToBodyLeft;
-    private enum hand_states { HANDS_NEUTRAL = 0, HANDS_LOW, HANDS_HIGH, HANDS_MIDDLE };
+    private float distanceToBodyRightY;
+    private float distanceToBodyLeftY;
+    private enum hand_states { HANDS_NEUTRAL = 0, RIGHT_UP_LEFT_DOWN, HANDS_EQUAL, LEFT_UP_RIGHT_DOWN };
     private hand_states[] state;
 
     // Use this for initialization
@@ -55,34 +55,42 @@ public class BalayageHaut : MonoBehaviour
             left_hand_position = kpc.Hand_Left.transform.position;
             right_elbow_position = kpc.Elbow_Right.transform.position;
             left_elbow_position = kpc.Elbow_Left.transform.position;
-            distanceToBodyRight = right_hand_position.y - right_elbow_position.y;
-            distanceToBodyLeft = left_hand_position.y - left_elbow_position.y;
+            distanceToBodyRightY = right_hand_position.y - right_elbow_position.y;
+            distanceToBodyLeftY = left_hand_position.y - left_elbow_position.y;
+            //on pourrait ajouter des conditions sur le x aussi
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kpc.transform.position;
-            if (distanceToBodyRight > distance_threshold_up && distanceToBodyLeft > distance_threshold_up)
-                new_state = hand_states.HANDS_HIGH;
-            else if (distanceToBodyRight < distance_threshold_down && distanceToBodyLeft < distance_threshold_down)
-                new_state = hand_states.HANDS_LOW;
-            else if (distanceToBodyRight < distance_threshold_up && distanceToBodyRight > distance_threshold_down && distanceToBodyLeft < distance_threshold_up && distanceToBodyLeft > distance_threshold_down)
-                new_state = hand_states.HANDS_MIDDLE;
+
+            //état initial
+            //premier état distanceGauche>thresholdup et absdistanceDroite<thresholdown
+            //deuxième état, mains même y ou bien dans la même tranche de y
+            //3ème état, absdistanceGauche<thresholddown et absdistanceDroite>threhsoldup
+            //4ème état, mains même y ou bien dans la même tranche de y
+            //
+            if (Mathf.Abs(distanceToBodyRightY) < distance_threshold_down && Mathf.Abs(distanceToBodyLeftY) > distance_threshold_up)
+                new_state = hand_states.RIGHT_UP_LEFT_DOWN;
+            else if (Mathf.Abs(distanceToBodyLeftY) < distance_threshold_down && Mathf.Abs(distanceToBodyRightY) > distance_threshold_up)
+                new_state = hand_states.LEFT_UP_RIGHT_DOWN;
+            else if (Mathf.Abs(distanceToBodyRightY) < distance_threshold_up && Mathf.Abs(distanceToBodyRightY) > distance_threshold_down && Mathf.Abs(distanceToBodyLeftY) < distance_threshold_up && Mathf.Abs(distanceToBodyLeftY) > distance_threshold_down)
+                new_state = hand_states.HANDS_EQUAL;
             else { }
 
-            if (index_state == 0 && new_state == hand_states.HANDS_LOW)
+            if (index_state == 0 && new_state == hand_states.RIGHT_UP_LEFT_DOWN)
             {
                 index_state++;
                 b1 = false;
             }
-            else if (index_state == 1 && new_state == hand_states.HANDS_MIDDLE)
+            else if (index_state == 1 && new_state == hand_states.HANDS_EQUAL)
             {
                 index_state++;
                 //b1 = true;
             }
-            else if (index_state == 2 && new_state == hand_states.HANDS_HIGH)
+            else if (index_state == 2 && new_state == hand_states.LEFT_UP_RIGHT_DOWN)
             {
                 index_state++;
                 b1 = true;
             }
-            else if (index_state == 3 && (new_state == hand_states.HANDS_LOW || new_state == hand_states.HANDS_MIDDLE))
+            else if (index_state == 3 && new_state == hand_states.HANDS_EQUAL)
             {
                 index_state = 0;
                 b1 = false;
