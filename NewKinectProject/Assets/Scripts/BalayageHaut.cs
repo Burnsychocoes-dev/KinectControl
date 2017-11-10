@@ -35,7 +35,7 @@ public class BalayageHaut : MonoBehaviour
     void Start()
     {
         b1 = false;
-        state = new hand_states[3];
+        state = new hand_states[4];
         state[0] = hand_states.HANDS_NEUTRAL;
         state[1] = hand_states.HANDS_NEUTRAL;
         state[2] = hand_states.HANDS_NEUTRAL;
@@ -72,20 +72,42 @@ public class BalayageHaut : MonoBehaviour
                 index_state++;
                 b1 = false;
             }
-            else if (index_state == 1 && new_state == hand_states.HANDS_MIDDLE)
+            else if (index_state == 1 )
             {
-                index_state++;
+                if(new_state == hand_states.HANDS_LOW)
+                {
+
+                }else if(new_state == hand_states.HANDS_MIDDLE)
+                {
+                    index_state++;
+                }
+                
                 //b1 = true;
             }
-            else if (index_state == 2 && new_state == hand_states.HANDS_HIGH)
+            else if (index_state == 2)
             {
-                index_state++;
-                b1 = true;
+                if(new_state == hand_states.HANDS_MIDDLE)
+                {
+
+                }else if ( new_state == hand_states.HANDS_HIGH)
+                {
+                    index_state++;
+                    b1 = true;
+                }
+                
             }
-            else if (index_state == 3 && (new_state == hand_states.HANDS_LOW || new_state == hand_states.HANDS_MIDDLE))
+            else if (index_state == 3)
             {
-                index_state = 0;
-                b1 = false;
+                if(new_state == hand_states.HANDS_HIGH)
+                {
+                    b1 = false;
+                }
+                else
+                {
+                    index_state = 0;
+                    b1 = false;
+                }
+                
             }
             else { }
         }

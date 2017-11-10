@@ -33,7 +33,7 @@ public class CoupDePoingDroitAvant : MonoBehaviour
     void Start()
     {
         b1 = false;
-        state = new Right_hand_states[3];
+        state = new Right_hand_states[4];
         state[0] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         state[1] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         state[2] = Right_hand_states.RIGHT_HAND_NEUTRAL;
@@ -67,20 +67,42 @@ public class CoupDePoingDroitAvant : MonoBehaviour
                 index_state++;
                 b1 = false;
             }
-            else if (index_state == 1 && new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+            else if (index_state == 1)
             {
-                index_state++;
-                //b1 = true;
+                if(new_state == Right_hand_states.RIGHT_HAND_LOW)
+                {
+
+                }else if(new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+                {
+                    index_state++;
+                    //b1 = true;
+                }
+
             }
-            else if (index_state == 2 && new_state == Right_hand_states.RIGHT_HAND_HIGH)
+            else if (index_state == 2 )
             {
-                index_state++;
-                b1 = true;
+                if(new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+                {
+
+                }else if(new_state == Right_hand_states.RIGHT_HAND_HIGH)
+                {
+                    index_state++;
+                    b1 = true;
+                }
+                
             }
-            else if (index_state == 3 && (new_state == Right_hand_states.RIGHT_HAND_LOW || new_state == Right_hand_states.RIGHT_HAND_MIDDLE))
+            else if (index_state == 3 )
             {
-                index_state = 0;
-                b1 = false;
+                if(new_state == Right_hand_states.RIGHT_HAND_HIGH)
+                {
+                    b1 = false;
+                }
+                else
+                {
+                    index_state = 0;
+                    b1 = false;
+                }
+                
             }
             else { }
         }
