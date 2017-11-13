@@ -60,11 +60,11 @@ public class BalayageHaut1 : Movement
     }
     override protected void NewStateUpdate()
     {
-        if (distanceToBodyRight > distance_threshold_up && distanceToBodyLeft > distance_threshold_up)
+        if (distanceToBodyRight > distance_threshold_up * 0.6 && distanceToBodyLeft > distance_threshold_up * 0.6)
             new_state = hand_states.HANDS_HIGH;
-        else if (distanceToBodyRight < distance_threshold_down && distanceToBodyLeft < distance_threshold_down)
+        else if (distanceToBodyRight < distance_threshold_down * 0.6 && distanceToBodyLeft < distance_threshold_down * 0.6)
             new_state = hand_states.HANDS_LOW;
-        else if (distanceToBodyRight < distance_threshold_up && distanceToBodyRight > distance_threshold_down && distanceToBodyLeft < distance_threshold_up && distanceToBodyLeft > distance_threshold_down)
+        else if (distanceToBodyRight < distance_threshold_up * 0.6 && distanceToBodyRight > distance_threshold_down * 0.6 && distanceToBodyLeft < distance_threshold_up * 0.6 && distanceToBodyLeft > distance_threshold_down * 0.6)
             new_state = hand_states.HANDS_MIDDLE;
         else { }
 
@@ -84,7 +84,7 @@ public class BalayageHaut1 : Movement
             {
 
             }
-            else if (new_state == hand_states.HANDS_MIDDLE)
+            else if (new_state == hand_states.HANDS_HIGH)
             {
                 index_state++;
             }
@@ -93,14 +93,18 @@ public class BalayageHaut1 : Movement
         }
         else if (index_state == 2)
         {
-            if (new_state == hand_states.HANDS_MIDDLE)
+            if (new_state == hand_states.HANDS_HIGH)
             {
-
+                
             }
-            else if (new_state == hand_states.HANDS_HIGH)
+            else if (new_state == hand_states.HANDS_LOW || new_state == hand_states.HANDS_MIDDLE)
             {
-                index_state++;
-                //b1 = true;
+                index_state = 0;
+                b1 = true;
+            }
+            else
+            {
+                index_state = 0;
             }
 
         }

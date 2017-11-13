@@ -58,11 +58,11 @@ public class CoupDePoingDroitAvant1 : Movement
 
     override protected void NewStateUpdate()
     {
-        if (distanceToBody > distance_threshold_up && distanceHandShoulderY < distance_threshold_down)
+        if (distanceToBody > distance_threshold_up && distanceHandShoulderY < distance_threshold_down/2)
             new_state = Right_hand_states.RIGHT_HAND_HIGH;
-        else if (distanceToBody < distance_threshold_down && distanceHandShoulderY < distance_threshold_down)
+        else if (distanceToBody < distance_threshold_down*0.75 && distanceHandShoulderY < distance_threshold_down/2)
             new_state = Right_hand_states.RIGHT_HAND_LOW;
-        else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down && distanceHandShoulderY < distance_threshold_down)
+        else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down*0.75 && distanceHandShoulderY < distance_threshold_down/2)
             new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
         else { }
 
@@ -99,6 +99,10 @@ public class CoupDePoingDroitAvant1 : Movement
             {
                 index_state++;
                 //b1 = true;
+            }
+            else
+            {
+                index_state = 0;
             }
 
         }

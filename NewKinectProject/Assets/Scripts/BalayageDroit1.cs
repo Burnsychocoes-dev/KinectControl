@@ -58,11 +58,11 @@ public class BalayageDroit1 : Movement
 
     override protected void NewStateUpdate()
     {
-        if (distanceToBody > distance_threshold_up)
+        if (distanceToBody > distance_threshold_up*9/8)
             new_state = Right_hand_states.RIGHT_HAND_HIGH;
         else if (distanceToBody < distance_threshold_down)
             new_state = Right_hand_states.RIGHT_HAND_LOW;
-        else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down)
+        else if (distanceToBody < distance_threshold_up*9/8 && distanceToBody > distance_threshold_down)
             new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
         else { }
         b1 = false;
@@ -87,6 +87,10 @@ public class BalayageDroit1 : Movement
                     //Debug.Log("right hand balayage droit middle");
                     index_state++;
                 }
+                else
+                {
+                    index_state = 0;
+                 }
 
                 //b1 = true;
             }

@@ -54,11 +54,11 @@ public class BalayageGauche1 : Movement
 
     override protected void NewStateUpdate()
     {
-        if (distanceToBody > distance_threshold_up)
+        if (distanceToBody > distance_threshold_up*9/8)
             new_state = Right_hand_states.RIGHT_HAND_HIGH;
         else if (distanceToBody < distance_threshold_down)
             new_state = Right_hand_states.RIGHT_HAND_LOW;
-        else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down)
+        else if (distanceToBody < distance_threshold_up*9/8 && distanceToBody > distance_threshold_down)
             new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
         else { }
 
@@ -95,6 +95,10 @@ public class BalayageGauche1 : Movement
             {
                 index_state++;
                 //b1 = true;
+            }
+            else
+            {
+                index_state = 0;
             }
 
         }
