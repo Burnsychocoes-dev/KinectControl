@@ -18,6 +18,8 @@ public class CoupDePoingDroitAvant : Movement
     private float distanceToBody;
     private float distanceHandShoulderY;
     private float punchSpeed;
+    //public float right_hand_X_speed;
+    //public float right_hand_Y_speed;
     public float punchSpeedMarge = 10f;
     public float marge = 3f;
     private enum Right_hand_states { RIGHT_HAND_NEUTRAL = 0, BOXING_STATE, RIGHT_HAND_PUNCH_STATE};
@@ -48,7 +50,7 @@ public class CoupDePoingDroitAvant : Movement
         {
             right_hand_position_2 = right_hand_position_1;
             right_hand_position_1 = kmc.Hand_Right.transform.position;
-            left_shoulder_position = kmc.Shoulder_Left.transform.position;
+            left_shoulder_position = kmc.Shoulder_Right.transform.position;
             distanceToBody = Mathf.Abs(right_hand_position_1.z - left_shoulder_position.z);
    
             //Debug.Log(punchSpeed);
@@ -66,7 +68,9 @@ public class CoupDePoingDroitAvant : Movement
 
     private void FixedUpdate()
     {
-        punchSpeed = (right_hand_position_2.z - right_hand_position_1.z) / Time.deltaTime;
+        punchSpeed = (right_hand_position_2.z - right_hand_position_1.z) / Time.fixedDeltaTime;
+        //right_hand_X_speed = Mathf.Abs(right_hand_position_2.x - right_hand_position_1.x) / Time.fixedDeltaTime;
+        //right_hand_Y_speed = Mathf.Abs(right_hand_position_2.y - right_hand_position_1.y) / Time.fixedDeltaTime;
 
         NewStateUpdate();
         StateTransition();
@@ -78,7 +82,7 @@ public class CoupDePoingDroitAvant : Movement
             new_state = Right_hand_states.BOXING_STATE;
         //if (distanceHandShoulderY > marge)
         //    Debug.Log("Mauvaise position de punch !");
-        else if (punchSpeed > punchSpeedMarge)
+        else if (punchSpeed > punchSpeedMarge && distanceHandShoulderY < marge)
             new_state = Right_hand_states.RIGHT_HAND_PUNCH_STATE;
         //if (distanceToBody > distance_threshold_up && distanceHandShoulderY < distance_threshold_down / 2)
         //    new_state = Right_hand_states.RIGHT_HAND_HIGH;

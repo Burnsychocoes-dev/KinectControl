@@ -22,7 +22,7 @@ public class Course : Movement
     private float distanceToBodyLeftY;
     private float distanceHandElbowRight;
     private float distanceHandElbowLeft;
-    private float marge = 2;
+    public float marge = 3;
     private enum hand_states { HANDS_NEUTRAL = 0, RIGHT_UP_LEFT_DOWN, HANDS_EQUAL, LEFT_UP_RIGHT_DOWN };
     private hand_states[] state;
     private hand_states new_state;
