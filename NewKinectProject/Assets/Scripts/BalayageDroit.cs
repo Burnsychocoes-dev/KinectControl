@@ -33,7 +33,7 @@ public class BalayageDroit : MonoBehaviour
     void Start()
     {
         b1 = false;
-        state = new Right_hand_states[3];
+        state = new Right_hand_states[4];
         state[0] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         state[1] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         state[2] = Right_hand_states.RIGHT_HAND_NEUTRAL;
@@ -41,6 +41,8 @@ public class BalayageDroit : MonoBehaviour
         index_state = 0;
         distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
         distance_threshold_up = 2*(kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        Debug.Log(distance_threshold_down);
+        Debug.Log(distance_threshold_up);
     }
 
     // Update is called once per frame

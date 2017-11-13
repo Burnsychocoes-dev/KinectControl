@@ -33,7 +33,7 @@ public class CoupDePoingDroitAvant : MonoBehaviour
     void Start()
     {
         b1 = false;
-        state = new Right_hand_states[3];
+        state = new Right_hand_states[4];
         state[0] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         state[1] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         state[2] = Right_hand_states.RIGHT_HAND_NEUTRAL;

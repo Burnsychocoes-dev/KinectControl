@@ -12,12 +12,12 @@ public class MovementController : MonoBehaviour {
     public Course course;
 	// Use this for initialization
 	void Start () {
-        //balayageDroit = gameObject.GetComponent<BalayageDroit>();
-        //balayageGauche = gameObject.GetComponent<BalayageGauche>();
-        //balayageHaut = gameObject.GetComponent<BalayageHaut>();
-        //coupDePoingDroitAvant = gameObject.GetComponent<coupDePoingDroitAvant>();
-        //course = gameObject.GetComponent<Course>();
-	}
+        balayageDroit = gameObject.GetComponent<BalayageDroit>();
+        balayageGauche = gameObject.GetComponent<BalayageGauche>();
+        balayageHaut = gameObject.GetComponent<BalayageHaut>();
+        coupDePoingDroitAvant = gameObject.GetComponent<CoupDePoingDroitAvant>();
+        course = gameObject.GetComponent<Course>();
+    }
 	
 	// Update is called once per frame
 	void Update () {

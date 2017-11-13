@@ -35,7 +35,7 @@ public class BalayageHaut : MonoBehaviour
     void Start()
     {
         b1 = false;
-        state = new hand_states[3];
+        state = new hand_states[4];
         state[0] = hand_states.HANDS_NEUTRAL;
         state[1] = hand_states.HANDS_NEUTRAL;
         state[2] = hand_states.HANDS_NEUTRAL;
