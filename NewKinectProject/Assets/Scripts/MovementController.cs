@@ -10,6 +10,10 @@ public class MovementController : MonoBehaviour {
     public BalayageHaut balayageHaut;
     public CoupDePoingDroitAvant coupDePoingDroitAvant;
     public Course course;
+
+    public GameObject[] cubes;
+    public int selection = 0;
+    public int selected = -1;
 	// Use this for initialization
 	void Start () {
         //balayageDroit = gameObject.GetComponent<BalayageDroit>();
@@ -21,29 +25,78 @@ public class MovementController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (balayageDroit.b1)
+        //pas encore de selectionné
+        if(selected == -1)
         {
-            Debug.Log("Balayage droit !");
-            //do sth
+            cubes[selection].GetComponent<Renderer>().material.color = Color.blue;
+
+            //augmente la selection de 1
+            if (balayageDroit.b1)
+            {
+                Debug.Log("Balayage droit !");
+                //do sth
+                cubes[selection].GetComponent<Renderer>().material.color = Color.white;
+                selection++;
+                if (selection == cubes.Length)
+                {
+                    selection = 0;
+
+                }
+                cubes[selection].GetComponent<Renderer>().material.color = Color.blue;
+            }
+            //diminue la selection de 1
+            if (balayageGauche.b1)
+            {
+                Debug.Log("Balayage gauche !");
+                //do sth
+                cubes[selection].GetComponent<Renderer>().material.color = Color.white;
+                selection--;
+                if (selection == -1)
+                {
+                    selection = cubes.Length - 1;
+
+                }
+                cubes[selection].GetComponent<Renderer>().material.color = Color.blue;
+            }
+
+            //selectionne le cube
+            if (balayageHaut.b1)
+            {
+                Debug.Log("Balayage haut !");
+                //do sth
+                selected = selection;
+                cubes[selected].GetComponent<Renderer>().material.color = Color.red;
+            }
         }
-        if (balayageGauche.b1)
+        //après selection
+        else
         {
-            Debug.Log("Balayage gauche !");
-            //do sth
-        }
-        if (balayageHaut.b1)
+            cubes[selected].GetComponent<Renderer>().material.color = Color.red;
+
+            //deselectionne le cube
+            if (coupDePoingDroitAvant.b1)
+            {
+                Debug.Log("Coup de poing droit avant !");
+                //do sth
+                cubes[selected].GetComponent<Renderer>().material.color = Color.white;
+                selected = -1;
+            }
+
+            //fais voler le cube
+            if (course.b1)
+            {
+                Debug.Log("Course !");
+                //do sth
+                cubes[selected].transform.Translate(new Vector3(0, 1, 0));
+            }
+        }       
+        
+
+        //dernier movement pour sortir du jeu
+
+        if (Input.GetKeyUp(KeyCode.Escape) == true)
         {
-            Debug.Log("Balayage haut !");
-            //do sth
-        }
-        if (coupDePoingDroitAvant.b1)
-        {
-            Debug.Log("Coup de poing droit avant !");
-            //do sth
-        }
-        if (course.b1)
-        {
-            Debug.Log("Course !");
+            Debug.Log("Escape !");
             //do sth
         }
 	}

@@ -48,6 +48,7 @@ public class Course : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateThreshold();
         hand_states new_state = hand_states.HANDS_NEUTRAL;
         if (kpc.isTracked)
         {
@@ -120,6 +121,17 @@ public class Course : MonoBehaviour
         }
         else
             b1 = false;
+    }
+    private void UpdateThreshold()
+    {
+        if ((kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
+        {
+            distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        }
+        if (2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
+        {
+            distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        }
     }
 }
 
