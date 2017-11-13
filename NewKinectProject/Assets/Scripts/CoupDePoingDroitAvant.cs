@@ -13,7 +13,7 @@ public class CoupDePoingDroitAvant : Movement
     
 
     private Vector3 right_hand_position; // Pour le controle d'application b1
-    private Vector3 right_shoulder_position;
+    private Vector3 left_shoulder_position;
     private float distanceToBody;
     private float distanceHandShoulderY;
     private enum Right_hand_states { RIGHT_HAND_NEUTRAL = 0, RIGHT_HAND_LOW, RIGHT_HAND_HIGH, RIGHT_HAND_MIDDLE };
@@ -42,9 +42,10 @@ public class CoupDePoingDroitAvant : Movement
         if (kmc.isTracked)
         {
             right_hand_position = kmc.Hand_Right.transform.position;
-            right_shoulder_position = kmc.Shoulder_Right.transform.position;
-            distanceToBody = Mathf.Abs(right_hand_position.z - right_shoulder_position.z);
-            distanceHandShoulderY = Mathf.Abs(right_hand_position.y- right_shoulder_position.y);
+            left_shoulder_position = kmc.Shoulder_Left.transform.position;
+            distanceToBody = Mathf.Abs(right_hand_position.z - left_shoulder_position.z);
+            //Debug.Log(distanceToBody);
+            distanceHandShoulderY = Mathf.Abs(right_hand_position.y- left_shoulder_position.y);
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kmc.transform.position;
             NewStateUpdate();
@@ -73,6 +74,7 @@ public class CoupDePoingDroitAvant : Movement
     {
         if (index_state == 0 && new_state == Right_hand_states.RIGHT_HAND_LOW)
         {
+            Debug.Log("Coup de poing low");
             index_state++;
             //b1 = false;
         }
@@ -84,6 +86,7 @@ public class CoupDePoingDroitAvant : Movement
             }
             else if (new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
             {
+                Debug.Log("Coup de poing middle");
                 index_state++;
                 //b1 = true;
             }
@@ -97,26 +100,27 @@ public class CoupDePoingDroitAvant : Movement
             }
             else if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
             {
+                Debug.Log("Coup de poing high");
                 index_state++;
                 //b1 = true;
             }
-            else
-            {
-                index_state = 0;
-            }
+            //else
+            //{
+            //    index_state = 0;
+            //}
 
         }
         else if (index_state == 3)
         {
-            if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
-            {
-                //b1 = false;
-            }
-            else
-            {
+            //if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
+            //{
+            //    //b1 = false;
+            //}
+            //else
+            //{
                 index_state = 0;
                 b1 = true;
-            }
+            //}
 
         }
         else { }

@@ -110,16 +110,16 @@ public class BalayageDroit: Movement
             }
             else if (index_state == 3)
             {
-                if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
-                {
-                    //b1 = false;
-                }
-                else
-                {
+                //if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
+                //{
+                //    //b1 = false;
+                //}
+                //else
+                //{
                     //Debug.Log("right hand balayage droit finish");
                     index_state = 0;
                     b1 = true;
-                }
+                //}
 
             }
             else { }               

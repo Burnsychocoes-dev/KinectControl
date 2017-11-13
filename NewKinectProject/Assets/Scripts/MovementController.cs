@@ -83,8 +83,8 @@ public class MovementController : MonoBehaviour {
 
             if (multiClonage.b1)
             {
-                Application.LoadLevel("menu");
                 Debug.Log("Multi Clonage");
+                Application.LoadLevel("menu");
             }
         }
         //après selection
@@ -109,14 +109,14 @@ public class MovementController : MonoBehaviour {
                 cubes[selected].transform.Translate(new Vector3(0, 1, 0));
             }
 
-            //duplique le cube
-            if(multiClonage.b1)
-            {
-                Debug.Log("Multi Clonage !");
-                //do sth
-                Object cube = Instantiate(cubePrefab, new Vector3(cubes[cubes.Length - 1].transform.position.x+2, 0, 0), Quaternion.identity);
-                cubes.SetValue(cube, cubes.Length);
-            }
+            ////duplique le cube
+            //if(multiClonage.b1)
+            //{
+            //    Debug.Log("Multi Clonage !");
+            //    //do sth
+            //    Object cube = Instantiate(cubePrefab, new Vector3(cubes[cubes.Length - 1].transform.position.x+2, 0, 0), Quaternion.identity);
+            //    cubes.SetValue(cube, cubes.Length);
+            //}
         }       
         
 

@@ -22,6 +22,7 @@ public class Course : Movement
     private float distanceToBodyLeftY;
     private float distanceHandElbowRight;
     private float distanceHandElbowLeft;
+    private float marge = 2;
     private enum hand_states { HANDS_NEUTRAL = 0, RIGHT_UP_LEFT_DOWN, HANDS_EQUAL, LEFT_UP_RIGHT_DOWN };
     private hand_states[] state;
     private hand_states new_state;
@@ -85,18 +86,30 @@ public class Course : Movement
         //    new_state = hand_states.HANDS_EQUAL;
         //else { }
 
-        if (distanceHandElbowRight > 0 && Mathf.Abs(distanceHandElbowRight) > distance_threshold_down*0.6 && distanceHandElbowLeft < 0 && Mathf.Abs(distanceHandElbowLeft) > distance_threshold_down * 0.6)
+        if (distanceHandElbowLeft < 0 && distanceHandElbowRight > 0)
         {
             new_state = hand_states.RIGHT_UP_LEFT_DOWN;
         }
-        else if (distanceHandElbowRight < 0 && Mathf.Abs(distanceHandElbowRight) > distance_threshold_down * 0.6 && distanceHandElbowLeft > 0 && Mathf.Abs(distanceHandElbowLeft) > distance_threshold_down * 0.6)
+        else if (distanceHandElbowLeft > 0 && distanceHandElbowRight < 0)
         {
             new_state = hand_states.LEFT_UP_RIGHT_DOWN;
         }
-        else if(Mathf.Abs(distanceHandElbowRight) < distance_threshold_down && Mathf.Abs(distanceHandElbowLeft)< distance_threshold_down)
+        else if (Mathf.Abs(distanceHandElbowRight) < marge && Mathf.Abs(distanceHandElbowLeft) < marge)
         {
             new_state = hand_states.HANDS_EQUAL;
         }
+        //if (distanceHandElbowRight > 0 && Mathf.Abs(distanceHandElbowRight) > distance_threshold_down * 0.6 && distanceHandElbowLeft < 0 && Mathf.Abs(distanceHandElbowLeft) > distance_threshold_down * 0.6)
+        //{
+        //    new_state = hand_states.RIGHT_UP_LEFT_DOWN;
+        //}
+        //else if (distanceHandElbowRight < 0 && Mathf.Abs(distanceHandElbowRight) > distance_threshold_down * 0.6 && distanceHandElbowLeft > 0 && Mathf.Abs(distanceHandElbowLeft) > distance_threshold_down * 0.6)
+        //{
+        //    new_state = hand_states.LEFT_UP_RIGHT_DOWN;
+        //}
+        //else if (Mathf.Abs(distanceHandElbowRight) < distance_threshold_down && Mathf.Abs(distanceHandElbowLeft) < distance_threshold_down)
+        //{
+        //    new_state = hand_states.HANDS_EQUAL;
+        //}
         else
         { }
 
@@ -141,15 +154,15 @@ public class Course : Movement
         }
         else if (index_state == 3)
         {
-            if (new_state == hand_states.LEFT_UP_RIGHT_DOWN)
-            {
-                //b1 = false;
-            }
-            else if (new_state == hand_states.HANDS_EQUAL)
-            {
+            //if (new_state == hand_states.LEFT_UP_RIGHT_DOWN)
+            //{
+            //    //b1 = false;
+            //}
+            //else if (new_state == hand_states.HANDS_EQUAL)
+            //{
                 index_state = 0;
                 b1 = true;
-            }
+            //}
 
         }
         else { }

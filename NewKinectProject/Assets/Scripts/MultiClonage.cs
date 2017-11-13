@@ -15,10 +15,14 @@ public class MultiClonage : Movement
     private Vector3 left_hand_position;
     private Vector3 right_elbow_position;
     private Vector3 left_elbow_position;
+    private Vector3 right_shoulder_position;
+    private Vector3 left_shoulder_position;
     private float x_DistanceBetweenRightElbowToRightHand;
     private float y_DistanceBetweenLeftElbowToLeftHand;
     private float x_DistanceBetweenRightHandToLeftHand;
     private float y_DistanceBetweenRightHandToLeftHand;
+    private float y_DistanceBetweenRightHandToRightShoulder;
+    private float y_DistanceBetweenLeftHandToLeftShoulder;
     public float marge = 3f;
     private enum MultiClonageState { NEUTRAL_STATE = 0, KAGE_BUNCHIN_STATE };
     private MultiClonageState[] state;
@@ -49,12 +53,16 @@ public class MultiClonage : Movement
             right_elbow_position = kmc.Elbow_Right.transform.position;
             left_hand_position = kmc.Hand_Left.transform.position;
             left_elbow_position = kmc.Elbow_Left.transform.position;
+            right_shoulder_position = kmc.Shoulder_Right.transform.position;
+            left_shoulder_position = kmc.Shoulder_Left.transform.position;
 
             //Update des distances
             x_DistanceBetweenRightElbowToRightHand = Mathf.Abs(right_elbow_position.x - right_hand_position.x);
             y_DistanceBetweenLeftElbowToLeftHand = Mathf.Abs(left_elbow_position.y - left_hand_position.y);
             x_DistanceBetweenRightHandToLeftHand = Mathf.Abs(right_hand_position.x - left_hand_position.x);
             y_DistanceBetweenRightHandToLeftHand = Mathf.Abs(right_hand_position.y - left_hand_position.y);
+            y_DistanceBetweenRightHandToRightShoulder = Mathf.Abs(right_hand_position.y - right_shoulder_position.y);
+            y_DistanceBetweenLeftHandToLeftShoulder = Mathf.Abs(left_hand_position.y - left_shoulder_position.y);
 
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kmc.transform.position;
@@ -74,7 +82,10 @@ public class MultiClonage : Movement
             y_DistanceBetweenLeftElbowToLeftHand < marge &&
             x_DistanceBetweenRightHandToLeftHand < marge &&
             y_DistanceBetweenRightHandToLeftHand < marge &&
-            left_hand_position.z < right_hand_position.z)
+            left_hand_position.z < right_hand_position.z &&
+            y_DistanceBetweenRightHandToRightShoulder < marge &&
+            y_DistanceBetweenLeftHandToLeftShoulder < marge
+            )
         { 
             new_state = MultiClonageState.KAGE_BUNCHIN_STATE;
         }   
@@ -86,7 +97,7 @@ public class MultiClonage : Movement
     {
             if (index_state == 0 && new_state == MultiClonageState.KAGE_BUNCHIN_STATE)
             {
-                Debug.Log("Multi clonage");
+                //Debug.Log("Multi clonage");
                 index_state++;
                 //b1 = false;
             }
@@ -98,7 +109,7 @@ public class MultiClonage : Movement
                 }
                 else
                 {
-                    Debug.Log("Multi clonage !");
+                    //Debug.Log("Multi clonage !");
                     index_state = 0;
                     b1 = true;
                 }

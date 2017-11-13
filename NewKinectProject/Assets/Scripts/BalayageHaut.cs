@@ -105,20 +105,21 @@ public class BalayageHaut : Movement
             else
             {
                 index_state = 0;
+                b1 = true;
             }
 
         }
         else if (index_state == 3)
         {
-            if (new_state == hand_states.HANDS_HIGH)
-            {
-                //b1 = false;
-            }
-            else
-            {
+            //if (new_state == hand_states.HANDS_HIGH)
+            //{
+            //    //b1 = false;
+            //}
+            //else
+            //{
                 index_state = 0;
                 b1 = true;
-            }
+            //}
 
         }
         else { }
