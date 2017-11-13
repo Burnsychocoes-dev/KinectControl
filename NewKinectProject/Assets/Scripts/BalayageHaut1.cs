@@ -58,7 +58,7 @@ public class BalayageHaut1 : Movement
         else
             b1 = false;
     }
-    protected void NewStateUpdate()
+    override protected void NewStateUpdate()
     {
         if (distanceToBodyRight > distance_threshold_up && distanceToBodyLeft > distance_threshold_up)
             new_state = hand_states.HANDS_HIGH;
@@ -71,7 +71,7 @@ public class BalayageHaut1 : Movement
         b1 = false;
     }
 
-    protected void StateTransition()
+    override protected void StateTransition()
     {
         if (index_state == 0 && new_state == hand_states.HANDS_LOW)
         {

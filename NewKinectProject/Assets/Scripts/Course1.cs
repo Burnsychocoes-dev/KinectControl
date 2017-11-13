@@ -8,7 +8,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Course : Movement
+public class Course1 : Movement
 {
     
 
@@ -61,7 +61,7 @@ public class Course : Movement
         else
             b1 = false;
     }
-    protected void NewStateUpdate()
+    override protected void NewStateUpdate()
     {
         //état initial
         //premier état distanceGauche>thresholdup et absdistanceDroite<thresholdown
@@ -80,7 +80,7 @@ public class Course : Movement
         b1 = false;
     }
 
-    protected void StateTransition()
+    override protected void StateTransition()
     {
         if (index_state == 0 && new_state == hand_states.RIGHT_UP_LEFT_DOWN)
         {

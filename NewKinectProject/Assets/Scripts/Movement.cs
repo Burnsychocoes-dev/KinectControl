@@ -23,7 +23,7 @@ public class Movement : MonoBehaviour {
 	
 	}
 
-    protected void UpdateThreshold()
+    protected virtual void UpdateThreshold()
     {
         if ((kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
         {

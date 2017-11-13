@@ -56,7 +56,7 @@ public class BalayageDroit1 : Movement
     }
         
 
-    private void NewStateUpdate()
+    override protected void NewStateUpdate()
     {
         if (distanceToBody > distance_threshold_up)
             new_state = Right_hand_states.RIGHT_HAND_HIGH;
@@ -68,7 +68,7 @@ public class BalayageDroit1 : Movement
         b1 = false;
     }
 
-    private void StateTransition()
+    override protected void StateTransition()
     {
             if (index_state == 0 && new_state == Right_hand_states.RIGHT_HAND_LOW)
             {

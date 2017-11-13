@@ -10,6 +10,11 @@ public class MovementController : MonoBehaviour {
     public BalayageHaut balayageHaut;
     public CoupDePoingDroitAvant coupDePoingDroitAvant;
     public Course course;
+    public BalayageDroit1 balayageDroit1;
+    public BalayageGauche1 balayageGauche1;
+    public BalayageHaut1 balayageHaut1;
+    public CoupDePoingDroitAvant1 coupDePoingDroitAvant1;
+    public Course1 course1;
 
     public GameObject[] cubes;
     public int selection = 0;
@@ -17,10 +22,18 @@ public class MovementController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         balayageDroit = gameObject.GetComponent<BalayageDroit>();
+       
         balayageGauche = gameObject.GetComponent<BalayageGauche>();
+        
         balayageHaut = gameObject.GetComponent<BalayageHaut>();
         coupDePoingDroitAvant = gameObject.GetComponent<CoupDePoingDroitAvant>();
         course = gameObject.GetComponent<Course>();
+
+        balayageDroit1 = gameObject.GetComponent<BalayageDroit1>();
+        balayageGauche1 = gameObject.GetComponent<BalayageGauche1>();
+        balayageHaut1 = gameObject.GetComponent<BalayageHaut1>();
+        coupDePoingDroitAvant1 = gameObject.GetComponent<CoupDePoingDroitAvant1>();
+        course1 = gameObject.GetComponent<Course1>();
     }
 	
 	// Update is called once per frame
@@ -31,7 +44,7 @@ public class MovementController : MonoBehaviour {
             cubes[selection].GetComponent<Renderer>().material.color = Color.blue;
 
             //augmente la selection de 1
-            if (balayageDroit.b1)
+            if (balayageDroit1.b1)
             {
                 Debug.Log("Balayage droit !");
                 //do sth
@@ -45,7 +58,7 @@ public class MovementController : MonoBehaviour {
                 cubes[selection].GetComponent<Renderer>().material.color = Color.blue;
             }
             //diminue la selection de 1
-            if (balayageGauche.b1)
+            if (balayageGauche1.b1)
             {
                 Debug.Log("Balayage gauche !");
                 //do sth
@@ -60,7 +73,7 @@ public class MovementController : MonoBehaviour {
             }
 
             //selectionne le cube
-            if (balayageHaut.b1)
+            if (balayageHaut1.b1)
             {
                 Debug.Log("Balayage haut !");
                 //do sth
@@ -68,12 +81,12 @@ public class MovementController : MonoBehaviour {
                 cubes[selected].GetComponent<Renderer>().material.color = Color.red;
             }
 
-            if(coupDePoingDroitAvant.b1)
+            if(coupDePoingDroitAvant1.b1)
             {
                 Debug.Log("Coup de poing avant");
             }
 
-            if (course.b1)
+            if (course1.b1)
             {
                 Debug.Log("Course");
             }
@@ -84,7 +97,7 @@ public class MovementController : MonoBehaviour {
             cubes[selected].GetComponent<Renderer>().material.color = Color.red;
 
             //deselectionne le cube
-            if (coupDePoingDroitAvant.b1)
+            if (coupDePoingDroitAvant1.b1)
             {
                 Debug.Log("Coup de poing droit avant !");
                 //do sth
@@ -93,7 +106,7 @@ public class MovementController : MonoBehaviour {
             }
 
             //fais voler le cube
-            if (course.b1)
+            if (course1.b1)
             {
                 Debug.Log("Course !");
                 //do sth
