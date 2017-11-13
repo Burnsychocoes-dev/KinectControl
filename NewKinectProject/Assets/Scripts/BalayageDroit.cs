@@ -48,6 +48,7 @@ public class BalayageDroit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateThreshold();
         Right_hand_states new_state = Right_hand_states.RIGHT_HAND_NEUTRAL;
         if (kpc.isTracked)
         {
@@ -69,25 +70,59 @@ public class BalayageDroit : MonoBehaviour
                 index_state++;
                 b1 = false;
             }
-            else if (index_state == 1 && new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+            else if (index_state == 1)
             {
-                index_state++;
+                if(new_state == Right_hand_states.RIGHT_HAND_LOW)
+                {
+
+                }else if ( new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+                {
+                    index_state++;
+                }
+                
                 //b1 = true;
             }
-            else if (index_state == 2 && new_state == Right_hand_states.RIGHT_HAND_HIGH)
+            else if (index_state == 2 )
             {
-                index_state ++;
-                b1 = true;
+                if(new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+                {
+
+                }else if(new_state == Right_hand_states.RIGHT_HAND_HIGH)
+                {
+                    index_state++;
+                    b1 = true;
+                }
+                
             }
-            else if (index_state == 3 && (new_state == Right_hand_states.RIGHT_HAND_LOW || new_state == Right_hand_states.RIGHT_HAND_MIDDLE))
+            else if (index_state == 3 )
             {
-                index_state = 0;
-                b1 = false;
+                if(new_state == Right_hand_states.RIGHT_HAND_HIGH)
+                {
+                    b1 = false;
+                }
+                else
+                {
+                    index_state = 0;
+                    b1 = false;
+                }
+                
             }
             else { }
         }
         else
             b1 = false;
+    }
+
+    private void UpdateThreshold()
+    {
+        if ((kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
+        {
+            distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        }
+        if (2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
+        {
+            distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        }
     }
 }
 

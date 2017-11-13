@@ -48,6 +48,7 @@ public class Course : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateThreshold();
         hand_states new_state = hand_states.HANDS_NEUTRAL;
         if (kpc.isTracked)
         {
@@ -80,25 +81,57 @@ public class Course : MonoBehaviour
                 index_state++;
                 b1 = false;
             }
-            else if (index_state == 1 && new_state == hand_states.HANDS_EQUAL)
+            else if (index_state == 1 )
             {
-                index_state++;
+                if(new_state == hand_states.RIGHT_UP_LEFT_DOWN)
+                {
+
+                }else if(new_state == hand_states.HANDS_EQUAL)
+                {
+                    index_state++;
+                }                
                 //b1 = true;
             }
-            else if (index_state == 2 && new_state == hand_states.LEFT_UP_RIGHT_DOWN)
+            else if (index_state == 2 )
             {
-                index_state++;
-                b1 = true;
+                if(new_state == hand_states.HANDS_EQUAL)
+                {
+
+                }else if(new_state == hand_states.LEFT_UP_RIGHT_DOWN)
+                {
+                    index_state++;
+                    b1 = true;
+                }
+                
             }
-            else if (index_state == 3 && new_state == hand_states.HANDS_EQUAL)
+            else if (index_state == 3)
             {
-                index_state = 0;
-                b1 = false;
+                if(new_state == hand_states.LEFT_UP_RIGHT_DOWN)
+                {
+                    b1 = false;
+                }
+                else if ( new_state == hand_states.HANDS_EQUAL)
+                {
+                    index_state = 0;
+                    b1 = false;
+                }
+                
             }
             else { }
         }
         else
             b1 = false;
+    }
+    private void UpdateThreshold()
+    {
+        if ((kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
+        {
+            distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        }
+        if (2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
+        {
+            distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        }
     }
 }
 
