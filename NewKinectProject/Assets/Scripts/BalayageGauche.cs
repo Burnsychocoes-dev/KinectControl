@@ -25,7 +25,6 @@ public class BalayageGauche : MonoBehaviour
     private Vector3 right_hand_position; // Pour le controle d'application b1
     private Vector3 right_shoulder_position;
     private float distanceToBody;
-    private float distanceToBodyAbs;
     private enum Right_hand_states { RIGHT_HAND_NEUTRAL = 0, RIGHT_HAND_LOW, RIGHT_HAND_HIGH, RIGHT_HAND_MIDDLE };
     private Right_hand_states[] state;
 
@@ -53,7 +52,6 @@ public class BalayageGauche : MonoBehaviour
             right_hand_position = kmc.Hand_Right.transform.position;
             right_shoulder_position = kmc.Shoulder_Right.transform.position;
             distanceToBody = right_shoulder_position.x - right_hand_position.x;
-            distanceToBodyAbs = Mathf.Abs(distanceToBody);
             //pas sûr
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kmc.transform.position;
