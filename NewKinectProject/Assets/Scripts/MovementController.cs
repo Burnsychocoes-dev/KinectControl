@@ -67,6 +67,16 @@ public class MovementController : MonoBehaviour {
                 selected = selection;
                 cubes[selected].GetComponent<Renderer>().material.color = Color.red;
             }
+
+            if(coupDePoingDroitAvant.b1)
+            {
+                Debug.Log("Coup de poing avant");
+            }
+
+            if (course.b1)
+            {
+                Debug.Log("Course");
+            }
         }
         //après selection
         else

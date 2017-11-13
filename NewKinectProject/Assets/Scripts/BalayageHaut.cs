@@ -10,8 +10,8 @@ using System.Collections;
 
 public class BalayageHaut : MonoBehaviour
 {
-    [Tooltip("Kinect Point Controller associé à l'upperbody.")]
-    public KinectPointController kpc;
+    [Tooltip("Kinect mouvement Controller associé à l'upperbody.")]
+    public KinectModelControllerV2 kmc;
     [Tooltip("Seuil de position haute du bras droit (éloigné du corps).")]
     public float distance_threshold_up = 1.1F;
     [Tooltip("Seuil de position basse du bras droit (collé au corps).")]
@@ -41,8 +41,8 @@ public class BalayageHaut : MonoBehaviour
         state[2] = hand_states.HANDS_NEUTRAL;
         state[3] = hand_states.HANDS_NEUTRAL;
         index_state = 0;
-        distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
-        distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
     }
 
     // Update is called once per frame
@@ -50,16 +50,16 @@ public class BalayageHaut : MonoBehaviour
     {
         UpdateThreshold();
         hand_states new_state = hand_states.HANDS_NEUTRAL;
-        if (kpc.isTracked)
+        if (kmc.isTracked)
         {
-            right_hand_position = kpc.Hand_Right.transform.position;
-            left_hand_position = kpc.Hand_Left.transform.position;
-            right_elbow_position = kpc.Elbow_Right.transform.position;
-            left_elbow_position = kpc.Elbow_Left.transform.position;
+            right_hand_position = kmc.Hand_Right.transform.position;
+            left_hand_position = kmc.Hand_Left.transform.position;
+            right_elbow_position = kmc.Shoulder_Right.transform.position;
+            left_elbow_position = kmc.Elbow_Left.transform.position;
             distanceToBodyRight = right_hand_position.y - right_elbow_position.y;
             distanceToBodyLeft = left_hand_position.y - left_elbow_position.y;
             //à affiner selon le transform que l'on mettra
-            //right_hand_position = kpc.transform.position;
+            //right_hand_position = kmc.transform.position;
             if (distanceToBodyRight > distance_threshold_up && distanceToBodyLeft > distance_threshold_up)
                 new_state = hand_states.HANDS_HIGH;
             else if (distanceToBodyRight < distance_threshold_down && distanceToBodyLeft < distance_threshold_down)
@@ -68,10 +68,12 @@ public class BalayageHaut : MonoBehaviour
                 new_state = hand_states.HANDS_MIDDLE;
             else { }
 
+            b1 = false;
+
             if (index_state == 0 && new_state == hand_states.HANDS_LOW)
             {
                 index_state++;
-                b1 = false;
+                //b1 = false;
             }
             else if (index_state == 1 )
             {
@@ -93,7 +95,7 @@ public class BalayageHaut : MonoBehaviour
                 }else if ( new_state == hand_states.HANDS_HIGH)
                 {
                     index_state++;
-                    b1 = true;
+                    //b1 = true;
                 }
                 
             }
@@ -101,12 +103,12 @@ public class BalayageHaut : MonoBehaviour
             {
                 if(new_state == hand_states.HANDS_HIGH)
                 {
-                    b1 = false;
+                    //b1 = false;
                 }
                 else
                 {
                     index_state = 0;
-                    b1 = false;
+                    b1 = true;
                 }
                 
             }
@@ -117,13 +119,13 @@ public class BalayageHaut : MonoBehaviour
     }
     private void UpdateThreshold()
     {
-        if ((kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
+        if ((kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
         {
-            distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+            distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         }
-        if (2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
+        if (2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
         {
-            distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+            distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         }
     }
 }

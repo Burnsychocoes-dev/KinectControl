@@ -10,8 +10,8 @@ using System.Collections;
 
 public class CoupDePoingDroitAvant : MonoBehaviour
 {
-    [Tooltip("Kinect Point Controller associé à l'upperbody.")]
-    public KinectPointController kpc;
+    [Tooltip("Kinect mouvement Controller associé à l'upperbody.")]
+    public KinectModelControllerV2 kmc;
     //threshold à faire en proportion avec le corps
     [Tooltip("Seuil de position haute du bras droit (éloigné du corps).")]
     public float distance_threshold_up = 1.1F;
@@ -24,7 +24,7 @@ public class CoupDePoingDroitAvant : MonoBehaviour
     public bool b1 = false;
 
     private Vector3 right_hand_position; // Pour le controle d'application b1
-    private Vector3 right_elbow_position;
+    private Vector3 right_shoulder_position;
     private float distanceToBody;
     private enum Right_hand_states { RIGHT_HAND_NEUTRAL = 0, RIGHT_HAND_LOW, RIGHT_HAND_HIGH, RIGHT_HAND_MIDDLE };
     private Right_hand_states[] state;
@@ -39,8 +39,8 @@ public class CoupDePoingDroitAvant : MonoBehaviour
         state[2] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         state[3] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         index_state = 0;
-        distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
-        distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_down = (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_up = 2 * (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
     }
 
     // Update is called once per frame
@@ -48,13 +48,13 @@ public class CoupDePoingDroitAvant : MonoBehaviour
     {
         UpdateThreshold();
         Right_hand_states new_state = Right_hand_states.RIGHT_HAND_NEUTRAL;
-        if (kpc.isTracked)
+        if (kmc.isTracked)
         {
-            right_hand_position = kpc.Hand_Right.transform.position;
-            right_elbow_position = kpc.Elbow_Right.transform.position;
-            distanceToBody = -(right_hand_position.z - right_elbow_position.z);
+            right_hand_position = kmc.Hand_Right.transform.position;
+            right_shoulder_position = kmc.Elbow_Right.transform.position;
+            distanceToBody = Mathf.Abs(right_hand_position.z - right_shoulder_position.z);
             //à affiner selon le transform que l'on mettra
-            //right_hand_position = kpc.transform.position;
+            //right_hand_position = kmc.transform.position;
             if (distanceToBody > distance_threshold_up)
                 new_state = Right_hand_states.RIGHT_HAND_HIGH;
             else if (distanceToBody < distance_threshold_down)
@@ -63,10 +63,12 @@ public class CoupDePoingDroitAvant : MonoBehaviour
                 new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
             else { }
 
+            b1 = false;
+
             if (index_state == 0 && new_state == Right_hand_states.RIGHT_HAND_LOW)
             {
                 index_state++;
-                b1 = false;
+                //b1 = false;
             }
             else if (index_state == 1)
             {
@@ -88,7 +90,7 @@ public class CoupDePoingDroitAvant : MonoBehaviour
                 }else if(new_state == Right_hand_states.RIGHT_HAND_HIGH)
                 {
                     index_state++;
-                    b1 = true;
+                    //b1 = true;
                 }
                 
             }
@@ -96,12 +98,12 @@ public class CoupDePoingDroitAvant : MonoBehaviour
             {
                 if(new_state == Right_hand_states.RIGHT_HAND_HIGH)
                 {
-                    b1 = false;
+                    //b1 = false;
                 }
                 else
                 {
                     index_state = 0;
-                    b1 = false;
+                    b1 = true;
                 }
                 
             }
@@ -113,13 +115,13 @@ public class CoupDePoingDroitAvant : MonoBehaviour
 
     private void UpdateThreshold()
     {
-        if((kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
+        if((kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
         {
-            distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+            distance_threshold_down = (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         }
-        if(2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
+        if(2 * (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
         {
-            distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+            distance_threshold_up = 2 * (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         }
     }
 }

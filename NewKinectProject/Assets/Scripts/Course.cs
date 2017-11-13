@@ -10,8 +10,8 @@ using System.Collections;
 
 public class Course : MonoBehaviour
 {
-    [Tooltip("Kinect Point Controller associé à l'upperbody.")]
-    public KinectPointController kpc;
+    [Tooltip("Kinect mouvement Controller associé à l'upperbody.")]
+    public KinectModelControllerV2 kmc;
     [Tooltip("Seuil de position haute du bras droit (éloigné du corps).")]
     public float distance_threshold_up = 1.1F;
     [Tooltip("Seuil de position basse du bras droit (collé au corps).")]
@@ -24,8 +24,8 @@ public class Course : MonoBehaviour
 
     private Vector3 left_hand_position;
     private Vector3 right_hand_position; // Pour le controle d'application b1
-    private Vector3 left_elbow_position;
-    private Vector3 right_elbow_position;
+    private Vector3 left_shoulder_position;
+    private Vector3 right_shoulder_position;
     private float distanceToBodyRightY;
     private float distanceToBodyLeftY;
     private enum hand_states { HANDS_NEUTRAL = 0, RIGHT_UP_LEFT_DOWN, HANDS_EQUAL, LEFT_UP_RIGHT_DOWN };
@@ -41,8 +41,8 @@ public class Course : MonoBehaviour
         state[2] = hand_states.HANDS_NEUTRAL;
         state[3] = hand_states.HANDS_NEUTRAL;
         index_state = 0;
-        distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
-        distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
     }
 
     // Update is called once per frame
@@ -50,17 +50,17 @@ public class Course : MonoBehaviour
     {
         UpdateThreshold();
         hand_states new_state = hand_states.HANDS_NEUTRAL;
-        if (kpc.isTracked)
+        if (kmc.isTracked)
         {
-            right_hand_position = kpc.Hand_Right.transform.position;
-            left_hand_position = kpc.Hand_Left.transform.position;
-            right_elbow_position = kpc.Elbow_Right.transform.position;
-            left_elbow_position = kpc.Elbow_Left.transform.position;
-            distanceToBodyRightY = right_hand_position.y - right_elbow_position.y;
-            distanceToBodyLeftY = left_hand_position.y - left_elbow_position.y;
+            right_hand_position = kmc.Hand_Right.transform.position;
+            left_hand_position = kmc.Hand_Left.transform.position;
+            right_shoulder_position = kmc.Shoulder_Right.transform.position;
+            left_shoulder_position = kmc.Shoulder_Left.transform.position;
+            distanceToBodyRightY = right_hand_position.y - right_shoulder_position.y;
+            distanceToBodyLeftY = left_hand_position.y - left_shoulder_position.y;
             //on pourrait ajouter des conditions sur le x aussi
             //à affiner selon le transform que l'on mettra
-            //right_hand_position = kpc.transform.position;
+            //right_hand_position = kmc.transform.position;
 
             //état initial
             //premier état distanceGauche>thresholdup et absdistanceDroite<thresholdown
@@ -76,10 +76,12 @@ public class Course : MonoBehaviour
                 new_state = hand_states.HANDS_EQUAL;
             else { }
 
+            b1 = false;
+
             if (index_state == 0 && new_state == hand_states.RIGHT_UP_LEFT_DOWN)
             {
                 index_state++;
-                b1 = false;
+                //b1 = false;
             }
             else if (index_state == 1 )
             {
@@ -100,7 +102,7 @@ public class Course : MonoBehaviour
                 }else if(new_state == hand_states.LEFT_UP_RIGHT_DOWN)
                 {
                     index_state++;
-                    b1 = true;
+                    //b1 = true;
                 }
                 
             }
@@ -108,12 +110,12 @@ public class Course : MonoBehaviour
             {
                 if(new_state == hand_states.LEFT_UP_RIGHT_DOWN)
                 {
-                    b1 = false;
+                    //b1 = false;
                 }
                 else if ( new_state == hand_states.HANDS_EQUAL)
                 {
                     index_state = 0;
-                    b1 = false;
+                    b1 = true;
                 }
                 
             }
@@ -124,13 +126,13 @@ public class Course : MonoBehaviour
     }
     private void UpdateThreshold()
     {
-        if ((kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
+        if ((kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
         {
-            distance_threshold_down = (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+            distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         }
-        if (2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
+        if (2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
         {
-            distance_threshold_up = 2 * (kpc.Elbow_Right.transform.position.y - kpc.Hip_Right.transform.position.y) / 3;
+            distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         }
     }
 }
