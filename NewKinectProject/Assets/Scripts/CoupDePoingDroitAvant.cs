@@ -26,6 +26,7 @@ public class CoupDePoingDroitAvant : MonoBehaviour
     private Vector3 right_hand_position; // Pour le controle d'application b1
     private Vector3 right_shoulder_position;
     private float distanceToBody;
+    private float distanceHandShoulderY;
     private enum Right_hand_states { RIGHT_HAND_NEUTRAL = 0, RIGHT_HAND_LOW, RIGHT_HAND_HIGH, RIGHT_HAND_MIDDLE };
     private Right_hand_states[] state;
 
@@ -39,8 +40,8 @@ public class CoupDePoingDroitAvant : MonoBehaviour
         state[2] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         state[3] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         index_state = 0;
-        distance_threshold_down = (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
-        distance_threshold_up = 2 * (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
     }
 
     // Update is called once per frame
@@ -51,15 +52,16 @@ public class CoupDePoingDroitAvant : MonoBehaviour
         if (kmc.isTracked)
         {
             right_hand_position = kmc.Hand_Right.transform.position;
-            right_shoulder_position = kmc.Elbow_Right.transform.position;
+            right_shoulder_position = kmc.Shoulder_Right.transform.position;
             distanceToBody = Mathf.Abs(right_hand_position.z - right_shoulder_position.z);
+            distanceHandShoulderY = Mathf.Abs(right_hand_position.y- right_shoulder_position.y);
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kmc.transform.position;
-            if (distanceToBody > distance_threshold_up)
+            if (distanceToBody > distance_threshold_up && distanceHandShoulderY < distance_threshold_down)
                 new_state = Right_hand_states.RIGHT_HAND_HIGH;
-            else if (distanceToBody < distance_threshold_down)
+            else if (distanceToBody < distance_threshold_down && distanceHandShoulderY < distance_threshold_down)
                 new_state = Right_hand_states.RIGHT_HAND_LOW;
-            else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down)
+            else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down && distanceHandShoulderY < distance_threshold_down)
                 new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
             else { }
 
@@ -115,13 +117,13 @@ public class CoupDePoingDroitAvant : MonoBehaviour
 
     private void UpdateThreshold()
     {
-        if((kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
+        if((kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
         {
-            distance_threshold_down = (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+            distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         }
-        if(2 * (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
+        if(2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
         {
-            distance_threshold_up = 2 * (kmc.Elbow_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+            distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         }
     }
 }

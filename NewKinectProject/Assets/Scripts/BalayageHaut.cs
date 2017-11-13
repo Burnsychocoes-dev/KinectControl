@@ -24,8 +24,8 @@ public class BalayageHaut : MonoBehaviour
 
     private Vector3 left_hand_position;
     private Vector3 right_hand_position; // Pour le controle d'application b1
-    private Vector3 left_elbow_position;
-    private Vector3 right_elbow_position;
+    private Vector3 left_shoulder_position;
+    private Vector3 right_shoulder_position;
     private float distanceToBodyRight;
     private float distanceToBodyLeft;
     private enum hand_states { HANDS_NEUTRAL = 0, HANDS_LOW, HANDS_HIGH, HANDS_MIDDLE };
@@ -54,10 +54,10 @@ public class BalayageHaut : MonoBehaviour
         {
             right_hand_position = kmc.Hand_Right.transform.position;
             left_hand_position = kmc.Hand_Left.transform.position;
-            right_elbow_position = kmc.Shoulder_Right.transform.position;
-            left_elbow_position = kmc.Elbow_Left.transform.position;
-            distanceToBodyRight = right_hand_position.y - right_elbow_position.y;
-            distanceToBodyLeft = left_hand_position.y - left_elbow_position.y;
+            right_shoulder_position = kmc.Shoulder_Right.transform.position;
+            left_shoulder_position = kmc.Shoulder_Left.transform.position;
+            distanceToBodyRight = right_hand_position.y - right_shoulder_position.y;
+            distanceToBodyLeft = left_hand_position.y - left_shoulder_position.y;
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kmc.transform.position;
             if (distanceToBodyRight > distance_threshold_up && distanceToBodyLeft > distance_threshold_up)
