@@ -12,11 +12,15 @@ public class CoupDePoingDroitAvant : Movement
 {
     
 
-    private Vector3 right_hand_position; // Pour le controle d'application b1
+    private Vector3 right_hand_position_1; // Pour le controle d'application b1
+    private Vector3 right_hand_position_2;
     private Vector3 left_shoulder_position;
     private float distanceToBody;
     private float distanceHandShoulderY;
-    private enum Right_hand_states { RIGHT_HAND_NEUTRAL = 0, RIGHT_HAND_LOW, RIGHT_HAND_HIGH, RIGHT_HAND_MIDDLE };
+    private float punchSpeed;
+    public float punchSpeedMarge = 10f;
+    public float marge = 3f;
+    private enum Right_hand_states { RIGHT_HAND_NEUTRAL = 0, BOXING_STATE, RIGHT_HAND_PUNCH_STATE};
     private Right_hand_states[] state;
     private Right_hand_states new_state;
 
@@ -32,6 +36,7 @@ public class CoupDePoingDroitAvant : Movement
         index_state = 0;
         distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+        right_hand_position_1 = kmc.Hand_Right.transform.position;
     }
 
     // Update is called once per frame
@@ -41,15 +46,17 @@ public class CoupDePoingDroitAvant : Movement
         new_state = Right_hand_states.RIGHT_HAND_NEUTRAL;
         if (kmc.isTracked)
         {
-            right_hand_position = kmc.Hand_Right.transform.position;
+            right_hand_position_2 = right_hand_position_1;
+            right_hand_position_1 = kmc.Hand_Right.transform.position;
             left_shoulder_position = kmc.Shoulder_Left.transform.position;
-            distanceToBody = Mathf.Abs(right_hand_position.z - left_shoulder_position.z);
+            distanceToBody = Mathf.Abs(right_hand_position_1.z - left_shoulder_position.z);
+   
+            //Debug.Log(punchSpeed);
             //Debug.Log(distanceToBody);
-            distanceHandShoulderY = Mathf.Abs(right_hand_position.y- left_shoulder_position.y);
+            distanceHandShoulderY = Mathf.Abs(right_hand_position_1.y- left_shoulder_position.y);
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kmc.transform.position;
-            NewStateUpdate();
-            StateTransition();
+
 
 
         }
@@ -57,14 +64,28 @@ public class CoupDePoingDroitAvant : Movement
             b1 = false;
     }
 
+    private void FixedUpdate()
+    {
+        punchSpeed = (right_hand_position_2.z - right_hand_position_1.z) / Time.deltaTime;
+
+        NewStateUpdate();
+        StateTransition();
+    }
+
     override protected void NewStateUpdate()
     {
-        if (distanceToBody > distance_threshold_up && distanceHandShoulderY < distance_threshold_down/2)
-            new_state = Right_hand_states.RIGHT_HAND_HIGH;
-        else if (distanceToBody < distance_threshold_down*0.75 && distanceHandShoulderY < distance_threshold_down/2)
-            new_state = Right_hand_states.RIGHT_HAND_LOW;
-        else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down*0.75 && distanceHandShoulderY < distance_threshold_down/2)
-            new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
+        if (distanceHandShoulderY < marge)
+            new_state = Right_hand_states.BOXING_STATE;
+        //if (distanceHandShoulderY > marge)
+        //    Debug.Log("Mauvaise position de punch !");
+        else if (punchSpeed > punchSpeedMarge)
+            new_state = Right_hand_states.RIGHT_HAND_PUNCH_STATE;
+        //if (distanceToBody > distance_threshold_up && distanceHandShoulderY < distance_threshold_down / 2)
+        //    new_state = Right_hand_states.RIGHT_HAND_HIGH;
+        //else if (distanceToBody < distance_threshold_down * 0.75 && distanceHandShoulderY < distance_threshold_down / 2)
+        //    new_state = Right_hand_states.RIGHT_HAND_LOW;
+        //else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down * 0.75 && distanceHandShoulderY < distance_threshold_down / 2)
+        //    new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
         else { }
 
         b1 = false;
@@ -72,57 +93,63 @@ public class CoupDePoingDroitAvant : Movement
 
     override protected void StateTransition()
     {
-        if (index_state == 0 && new_state == Right_hand_states.RIGHT_HAND_LOW)
+        if (index_state == 0 && new_state == Right_hand_states.BOXING_STATE)
         {
-            Debug.Log("Coup de poing low");
+            Debug.Log("Position boxing");
             index_state++;
             //b1 = false;
         }
         else if (index_state == 1)
         {
-            if (new_state == Right_hand_states.RIGHT_HAND_LOW)
+            if (new_state == Right_hand_states.BOXING_STATE)
             {
 
             }
-            else if (new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+            else if (new_state == Right_hand_states.RIGHT_HAND_PUNCH_STATE)
             {
-                Debug.Log("Coup de poing middle");
-                index_state++;
-                //b1 = true;
-            }
-
-        }
-        else if (index_state == 2)
-        {
-            if (new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
-            {
-
-            }
-            else if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
-            {
-                Debug.Log("Coup de poing high");
-                index_state++;
-                //b1 = true;
-            }
-            //else
-            //{
-            //    index_state = 0;
-            //}
-
-        }
-        else if (index_state == 3)
-        {
-            //if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
-            //{
-            //    //b1 = false;
-            //}
-            //else
-            //{
+                Debug.Log("Punch !");
                 index_state = 0;
                 b1 = true;
+            }
+            //else
+            //{
+            //    if (distanceHandShoulderY > marge)
+            //    {
+            //        index_state = 0;
+            //    }
             //}
-
         }
+        //else if (index_state == 2)
+        //{
+        //    if (new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+        //    {
+
+        //    }
+        //    else if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
+        //    {
+        //        Debug.Log("Coup de poing high");
+        //        index_state++;
+        //        //b1 = true;
+        //    }
+        //    //else
+        //    //{
+        //    //    index_state = 0;
+        //    //}
+
+        //}
+        //else if (index_state == 3)
+        //{
+        //    //if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
+        //    //{
+        //    //    //b1 = false;
+        //    //}
+        //    //else
+        //    //{
+        //        index_state = 0;
+        //        b1 = true;
+        //    //}
+
+        //}
         else { }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 
@@ -12,6 +13,8 @@ public class MovementController : MonoBehaviour {
     public Course course;
     public MultiClonage multiClonage;
 
+    public Text text;
+
     public GameObject cubePrefab;
     public GameObject[] cubes;
     public int selection = 0;
@@ -24,18 +27,21 @@ public class MovementController : MonoBehaviour {
         coupDePoingDroitAvant = gameObject.GetComponent<CoupDePoingDroitAvant>();
         course = gameObject.GetComponent<Course>();
         multiClonage = gameObject.GetComponent<MultiClonage>();
+        //text = GetComponent<Text>();
     }
 	
 	// Update is called once per frame
 	void Update () {
         //pas encore de selectionné
-        if(selected == -1)
+        //text.text = "";
+        if (selected == -1)
         {
             cubes[selection].GetComponent<Renderer>().material.color = Color.blue;
 
             //augmente la selection de 1
             if (balayageDroit.b1)
             {
+                text.text = "Balayage droit";
                 Debug.Log("Balayage droit !");
                 //do sth
                 cubes[selection].GetComponent<Renderer>().material.color = Color.white;
@@ -50,6 +56,7 @@ public class MovementController : MonoBehaviour {
             //diminue la selection de 1
             if (balayageGauche.b1)
             {
+                text.text = "Balayage gauche";
                 Debug.Log("Balayage gauche !");
                 //do sth
                 cubes[selection].GetComponent<Renderer>().material.color = Color.white;
@@ -65,6 +72,7 @@ public class MovementController : MonoBehaviour {
             //selectionne le cube
             if (balayageHaut.b1)
             {
+                text.text = "Balayage haut";
                 Debug.Log("Balayage haut !");
                 //do sth
                 selected = selection;
@@ -73,16 +81,19 @@ public class MovementController : MonoBehaviour {
 
             if(coupDePoingDroitAvant.b1)
             {
+                text.text = "Coup de poing avant";
                 Debug.Log("Coup de poing avant");
             }
 
             if (course.b1)
             {
+                text.text = "Course";
                 Debug.Log("Course");
             }
 
             if (multiClonage.b1)
             {
+                text.text = "Multi clonage";
                 Debug.Log("Multi Clonage");
                 Application.LoadLevel("menu");
             }
@@ -95,6 +106,7 @@ public class MovementController : MonoBehaviour {
             //deselectionne le cube
             if (coupDePoingDroitAvant.b1)
             {
+                text.text = "Coup de poing avant";
                 Debug.Log("Coup de poing droit avant !");
                 //do sth
                 cubes[selected].GetComponent<Renderer>().material.color = Color.white;
@@ -104,6 +116,7 @@ public class MovementController : MonoBehaviour {
             //fais voler le cube
             if (course.b1)
             {
+                text.text = "Course";
                 Debug.Log("Course !");
                 //do sth
                 cubes[selected].transform.Translate(new Vector3(0, 1, 0));
@@ -125,6 +138,7 @@ public class MovementController : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.Escape) == true)
         {
             Debug.Log("Escape !");
+            Application.LoadLevel("menu");
             //do sth
         }
 	}
