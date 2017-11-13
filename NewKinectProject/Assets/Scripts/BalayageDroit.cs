@@ -8,20 +8,9 @@
 using UnityEngine;
 using System.Collections;
 
-public class BalayageDroit : MonoBehaviour
+public class BalayageDroit: Movement
 {
-    [Tooltip("Kinect mouvement Controller associé à l'upperbody.")]
-    public KinectModelControllerV2 kmc;
-    [Tooltip("Seuil de position haute du bras droit (éloigné du corps).")]
-    public float distance_threshold_up = 1.1F;
-    [Tooltip("Seuil de position basse du bras droit (collé au corps).")]
-    public float distance_threshold_down = 0.7F;
-    //[Tooltip("Seuil de position middle du bras droit (mi-distance).")]
-    //public float distance_threshold_middle = 0.9F;
-    public int index_state = 0;
-    //movement détecté
-    public bool b1 = false;
-
+    
     private Vector3 right_hand_position; // Pour le controle d'application b1
     private Vector3 right_shoulder_position;
     private float distanceToBody;
@@ -40,7 +29,7 @@ public class BalayageDroit : MonoBehaviour
         state[3] = Right_hand_states.RIGHT_HAND_NEUTRAL;
         index_state = 0;
         distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
-        distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+        distance_threshold_up = 2*(kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
         Debug.Log(distance_threshold_down);
         Debug.Log(distance_threshold_up);
     }
@@ -65,83 +54,75 @@ public class BalayageDroit : MonoBehaviour
         else
             b1 = false;
     }
+        
 
-    protected virtual void UpdateThreshold()
+    override protected void NewStateUpdate()
     {
-        if ((kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
-        {
-            distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
-        }
-        if (2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
-        {
-            distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
-        }
-    }
-
-
-    protected void NewStateUpdate()
-    {
-        if (distanceToBody > distance_threshold_up)
+        if (distanceToBody > distance_threshold_up*9/8)
             new_state = Right_hand_states.RIGHT_HAND_HIGH;
         else if (distanceToBody < distance_threshold_down)
             new_state = Right_hand_states.RIGHT_HAND_LOW;
-        else if (distanceToBody < distance_threshold_up && distanceToBody > distance_threshold_down)
+        else if (distanceToBody < distance_threshold_up*9/8 && distanceToBody > distance_threshold_down)
             new_state = Right_hand_states.RIGHT_HAND_MIDDLE;
         else { }
         b1 = false;
     }
 
-    protected void StateTransition()
+    override protected void StateTransition()
     {
-        if (index_state == 0 && new_state == Right_hand_states.RIGHT_HAND_LOW)
-        {
-            //Debug.Log("right hand balayage droit low");
-            index_state++;
-            //b1 = false;
-        }
-        else if (index_state == 1)
-        {
-            if (new_state == Right_hand_states.RIGHT_HAND_LOW)
+            if (index_state == 0 && new_state == Right_hand_states.RIGHT_HAND_LOW)
             {
-
-            }
-            else if (new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
-            {
-                //Debug.Log("right hand balayage droit middle");
+                //Debug.Log("right hand balayage droit low");
                 index_state++;
-            }
-
-            //b1 = true;
-        }
-        else if (index_state == 2)
-        {
-            if (new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
-            {
-
-            }
-            else if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
-            {
-                //Debug.Log("right hand balayage droit high");
-                index_state++;
-                //b1 = true;
-            }
-
-        }
-        else if (index_state == 3)
-        {
-            if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
-            {
                 //b1 = false;
             }
-            else
+            else if (index_state == 1)
             {
-                //Debug.Log("right hand balayage droit finish");
-                index_state = 0;
-                b1 = true;
-            }
+                if (new_state == Right_hand_states.RIGHT_HAND_LOW)
+                {
 
-        }
-        else { }
+                }
+                else if (new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+                {
+                    //Debug.Log("right hand balayage droit middle");
+                    index_state++;
+                }
+                else
+                {
+                    index_state = 0;
+                 }
+
+                //b1 = true;
+            }
+            else if (index_state == 2)
+            {
+                if (new_state == Right_hand_states.RIGHT_HAND_MIDDLE)
+                {
+
+                }
+                else if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
+                {
+                    //Debug.Log("right hand balayage droit high");
+                    index_state++;
+                    //b1 = true;
+                }
+
+            }
+            else if (index_state == 3)
+            {
+                if (new_state == Right_hand_states.RIGHT_HAND_HIGH)
+                {
+                    //b1 = false;
+                }
+                else
+                {
+                    //Debug.Log("right hand balayage droit finish");
+                    index_state = 0;
+                    b1 = true;
+                }
+
+            }
+            else { }               
     }
 }
 

@@ -8,19 +8,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class BalayageHaut : MonoBehaviour
+public class BalayageHaut : Movement
 {
-    [Tooltip("Kinect mouvement Controller associé à l'upperbody.")]
-    public KinectModelControllerV2 kmc;
-    [Tooltip("Seuil de position haute du bras droit (éloigné du corps).")]
-    public float distance_threshold_up = 1.1F;
-    [Tooltip("Seuil de position basse du bras droit (collé au corps).")]
-    public float distance_threshold_down = 0.7F;
-    //[Tooltip("Seuil de position middle du bras droit (mi-distance).")]
-    //public float distance_threshold_middle = 0.9F;
-    public int index_state = 0;
-    //movement détecté
-    public bool b1 = false;
 
     private Vector3 left_hand_position;
     private Vector3 right_hand_position; // Pour le controle d'application b1
@@ -30,6 +19,7 @@ public class BalayageHaut : MonoBehaviour
     private float distanceToBodyLeft;
     private enum hand_states { HANDS_NEUTRAL = 0, HANDS_LOW, HANDS_HIGH, HANDS_MIDDLE };
     private hand_states[] state;
+    private hand_states new_state;
 
     // Use this for initialization
     void Start()
@@ -49,7 +39,7 @@ public class BalayageHaut : MonoBehaviour
     void Update()
     {
         UpdateThreshold();
-        hand_states new_state = hand_states.HANDS_NEUTRAL;
+        new_state = hand_states.HANDS_NEUTRAL;
         if (kmc.isTracked)
         {
             right_hand_position = kmc.Hand_Right.transform.position;
@@ -60,73 +50,78 @@ public class BalayageHaut : MonoBehaviour
             distanceToBodyLeft = left_hand_position.y - left_shoulder_position.y;
             //à affiner selon le transform que l'on mettra
             //right_hand_position = kmc.transform.position;
-            if (distanceToBodyRight > distance_threshold_up && distanceToBodyLeft > distance_threshold_up)
-                new_state = hand_states.HANDS_HIGH;
-            else if (distanceToBodyRight < distance_threshold_down && distanceToBodyLeft < distance_threshold_down)
-                new_state = hand_states.HANDS_LOW;
-            else if (distanceToBodyRight < distance_threshold_up && distanceToBodyRight > distance_threshold_down && distanceToBodyLeft < distance_threshold_up && distanceToBodyLeft > distance_threshold_down)
-                new_state = hand_states.HANDS_MIDDLE;
-            else { }
+            NewStateUpdate();
+            StateTransition();
 
-            b1 = false;
-
-            if (index_state == 0 && new_state == hand_states.HANDS_LOW)
-            {
-                index_state++;
-                //b1 = false;
-            }
-            else if (index_state == 1 )
-            {
-                if(new_state == hand_states.HANDS_LOW)
-                {
-
-                }else if(new_state == hand_states.HANDS_MIDDLE)
-                {
-                    index_state++;
-                }
-                
-                //b1 = true;
-            }
-            else if (index_state == 2)
-            {
-                if(new_state == hand_states.HANDS_MIDDLE)
-                {
-
-                }else if ( new_state == hand_states.HANDS_HIGH)
-                {
-                    index_state++;
-                    //b1 = true;
-                }
-                
-            }
-            else if (index_state == 3)
-            {
-                if(new_state == hand_states.HANDS_HIGH)
-                {
-                    //b1 = false;
-                }
-                else
-                {
-                    index_state = 0;
-                    b1 = true;
-                }
-                
-            }
-            else { }
+            
         }
         else
             b1 = false;
     }
-    private void UpdateThreshold()
+    override protected void NewStateUpdate()
     {
-        if ((kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_down)
+        if (distanceToBodyRight > distance_threshold_up * 0.6 && distanceToBodyLeft > distance_threshold_up * 0.6)
+            new_state = hand_states.HANDS_HIGH;
+        else if (distanceToBodyRight < distance_threshold_down * 0.6 && distanceToBodyLeft < distance_threshold_down * 0.6)
+            new_state = hand_states.HANDS_LOW;
+        else if (distanceToBodyRight < distance_threshold_up * 0.6 && distanceToBodyRight > distance_threshold_down * 0.6 && distanceToBodyLeft < distance_threshold_up * 0.6 && distanceToBodyLeft > distance_threshold_down * 0.6)
+            new_state = hand_states.HANDS_MIDDLE;
+        else { }
+
+        b1 = false;
+    }
+
+    override protected void StateTransition()
+    {
+        if (index_state == 0 && new_state == hand_states.HANDS_LOW)
         {
-            distance_threshold_down = (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+            index_state++;
+            //b1 = false;
         }
-        if (2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3 > distance_threshold_up)
+        else if (index_state == 1)
         {
-            distance_threshold_up = 2 * (kmc.Shoulder_Right.transform.position.y - kmc.Hip_Right.transform.position.y) / 3;
+            if (new_state == hand_states.HANDS_LOW)
+            {
+
+            }
+            else if (new_state == hand_states.HANDS_HIGH)
+            {
+                index_state++;
+            }
+
+            //b1 = true;
         }
+        else if (index_state == 2)
+        {
+            if (new_state == hand_states.HANDS_HIGH)
+            {
+                
+            }
+            else if (new_state == hand_states.HANDS_LOW || new_state == hand_states.HANDS_MIDDLE)
+            {
+                index_state = 0;
+                b1 = true;
+            }
+            else
+            {
+                index_state = 0;
+            }
+
+        }
+        else if (index_state == 3)
+        {
+            if (new_state == hand_states.HANDS_HIGH)
+            {
+                //b1 = false;
+            }
+            else
+            {
+                index_state = 0;
+                b1 = true;
+            }
+
+        }
+        else { }
     }
 }
 
