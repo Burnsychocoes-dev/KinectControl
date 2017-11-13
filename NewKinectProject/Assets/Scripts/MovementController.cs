@@ -15,7 +15,9 @@ public class MovementController : MonoBehaviour {
     public BalayageHaut1 balayageHaut1;
     public CoupDePoingDroitAvant1 coupDePoingDroitAvant1;
     public Course1 course1;
+    public MultiClonage multiClonage;
 
+    public GameObject cubePrefab;
     public GameObject[] cubes;
     public int selection = 0;
     public int selected = -1;
@@ -34,6 +36,7 @@ public class MovementController : MonoBehaviour {
         balayageHaut1 = gameObject.GetComponent<BalayageHaut1>();
         coupDePoingDroitAvant1 = gameObject.GetComponent<CoupDePoingDroitAvant1>();
         course1 = gameObject.GetComponent<Course1>();
+        multiClonage = gameObject.GetComponent<MultiClonage>();
     }
 	
 	// Update is called once per frame
@@ -111,6 +114,15 @@ public class MovementController : MonoBehaviour {
                 Debug.Log("Course !");
                 //do sth
                 cubes[selected].transform.Translate(new Vector3(0, 1, 0));
+            }
+
+            //duplique le cube
+            if(multiClonage.b1)
+            {
+                Debug.Log("Multi Clonage !");
+                //do sth
+                Object cube = Instantiate(cubePrefab, new Vector3(cubes[cubes.Length - 1].transform.position.x+2, 0, 0), Quaternion.identity);
+                cubes.SetValue(cube, cubes.Length);
             }
         }       
         

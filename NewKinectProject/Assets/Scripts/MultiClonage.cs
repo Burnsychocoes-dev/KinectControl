@@ -19,7 +19,7 @@ public class MultiClonage : Movement
     private float y_DistanceBetweenLeftElbowToLeftHand;
     private float x_DistanceBetweenRightHandToLeftHand;
     private float y_DistanceBetweenRightHandToLeftHand;
-    public float marge = 1f;
+    public float marge = 3f;
     private enum MultiClonageState { NEUTRAL_STATE = 0, KAGE_BUNCHIN_STATE };
     private MultiClonageState[] state;
     private MultiClonageState new_state;
